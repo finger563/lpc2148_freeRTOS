@@ -293,7 +293,7 @@ CPLUSPLUS_LIB = -lstdc++
 #  -Wl,...:     tell GCC to pass this to linker.
 #    -Map:      create map file
 #    --cref:    add cross reference to  map file
-LDFLAGS = -nostartfiles -Wl,-Map=$(PROJECT_NAME).map,--cref
+LDFLAGS = -nostartfiles -Wl,-Map=$(PROJECT_NAME).map,--cref --specs=nosys.specs
 LDFLAGS += -lc
 LDFLAGS += $(NEWLIBLPC) $(MATH_LIB)
 LDFLAGS += -lc -lgcc 
