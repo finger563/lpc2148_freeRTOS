@@ -149,12 +149,12 @@ ADEFS += -D__WinARM__
 # SOURCE DIRECTORIES
 #
 #-------------------------------------------------------------------------------
-FREERTOS_SOURCE_DIR        = ./FreeRTOS/Source
-SFE_SOURCE_DIR             = ./lib
-LOGOMATIC_SOURCE_DIR       = ./logomaticv2
-EFRAMEWORK                 = ./eFramework
-SCIFU_SOURCE_DIR           = ./scifu
-FATFS_SOURCE_DIR           = ./fatfs/ff6/src
+FREERTOS_SOURCE_DIR        = FreeRTOS/Source
+SFE_SOURCE_DIR             = lib
+LOGOMATIC_SOURCE_DIR       = logomaticv2
+EFRAMEWORK                 = eFramework
+SCIFU_SOURCE_DIR           = scifu
+FATFS_SOURCE_DIR           = fatfs/ff6/src
 ifeq ($(INCLUDE_UNIT_TEST),YES)
 EFRAMEWORK_UNIT_TEST       = $(EFRAMEWORK)/unitTest
 endif
@@ -199,7 +199,7 @@ CPPSRCARM += CLogoDynamite.cpp
 CPPSRCARM += $(LOGOMATIC_SOURCE_DIR)/logomatic_v2.cpp
 CPPSRCARM += $(EFRAMEWORK)/eFrameWork.cpp
 CPPSRCARM += $(EFRAMEWORK)/freeRTOS/CScheduler.cpp
-CPPSRCARM += $(EFRAMEWORK)/freeRTOS/CSubsystem.cpp
+CPPSRCARM += $(EFRAMEWORK)/freeRTOS/csubsystem.cpp
 ifeq ($(EFRAMEWORK_INCLUDE_ANALOG_SYSTEM),1)
 CPPSRCARM += $(EFRAMEWORK)/freeRTOS/CAnalogSampler.cpp
 CPPSRCARM += $(EFRAMEWORK)/freeRTOS/CLpc2000AnalogSampler.cpp

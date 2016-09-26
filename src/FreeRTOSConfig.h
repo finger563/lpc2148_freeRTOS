@@ -78,13 +78,13 @@
  *----------------------------------------------------------*/
 
 
-#define configUSE_PREEMPTION			   1
-#define configUSE_IDLE_HOOK				0
-#define configUSE_TICK_HOOK				1
+#define configUSE_PREEMPTION                    1
+#define configUSE_IDLE_HOOK	                0
+#define configUSE_TICK_HOOK	                1
 /* In this case configCPU_CLOCK_HZ is actually set to the pclk frequency, not
 the CPU frequency. */
-#define configCPU_CLOCK_HZ				( 5*12000000UL )	/* =12MHz xtal multiplied by 5 using the PLL. */
-#define configTICK_RATE_HZ				( ( portTickType ) 2000 )
+#define configCPU_CLOCK_HZ			( 5*12000000UL )	/* =12MHz xtal multiplied by 5 using the PLL. */
+#define configTICK_RATE_HZ			( ( portTickType ) 2000 )
 #define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE )3 )
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 128 )
 #define configTOTAL_HEAP_SIZE			( ( size_t ) (15 * 1024 ) )
@@ -92,27 +92,27 @@ the CPU frequency. */
 #define configUSE_TRACE_FACILITY		0
 #define configUSE_16_BIT_TICKS			0
 #define configIDLE_SHOULD_YIELD			1
-#define configUSE_MUTEXES				1
+#define configUSE_MUTEXES			1
 #define configUSE_RECURSIVE_MUTEXES		1
-#define configCHECK_FOR_STACK_OVERFLOW	1
-#define configUSE_COUNTING_SEMAPHORES   1
+#define configCHECK_FOR_STACK_OVERFLOW	        1
+#define configUSE_COUNTING_SEMAPHORES           1
 
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES			0
-#define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
+#define configMAX_CO_ROUTINE_PRIORITIES       ( 2 )
 
 /* Set the following definitions to 1 to include the API function, or zero
 to exclude the API function. */
 
 #define INCLUDE_vTaskPrioritySet		1
 #define INCLUDE_uxTaskPriorityGet		1
-#define INCLUDE_vTaskDelete				1
-#define INCLUDE_vTaskCleanUpResources	0
+#define INCLUDE_vTaskDelete			1
+#define INCLUDE_vTaskCleanUpResources	        0
 #define INCLUDE_vTaskSuspend			1
 #define INCLUDE_vTaskDelayUntil			1
-#define INCLUDE_vTaskDelay				1
+#define INCLUDE_vTaskDelay			1
 
-#define INCLUDE_uxTaskGetStackHighWaterMark 1
+#define INCLUDE_uxTaskGetStackHighWaterMark     1
 
 
 #endif /* FREERTOS_CONFIG_H */
