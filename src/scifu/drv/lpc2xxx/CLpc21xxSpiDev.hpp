@@ -2,7 +2,7 @@
 #define clpc21xxspidev_included
 
 #include <inttypes.h>
-#include "cscifuspidevice.hpp"
+#include "CScifuSpiDevice.hpp"
 
 class CLpc21xxSpiDev :
    public CScifuSpiDevice

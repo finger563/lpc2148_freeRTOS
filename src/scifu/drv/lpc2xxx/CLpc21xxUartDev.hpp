@@ -2,7 +2,7 @@
 #define clpc21xxuartdev_included
 
 #include <inttypes.h>
-#include "cscifuuartdevice.hpp"
+#include "CScifuUartDevice.hpp"
 
 class CLpc21xxUartDev :
    public CScifuUartDevice

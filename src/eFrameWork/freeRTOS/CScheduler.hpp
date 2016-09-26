@@ -27,7 +27,7 @@
 #include "eframework_config.hpp"
 
 #ifdef FREERTOS
-#include "freeRtos.h"
+#include "FreeRTOS.h"
 #include "queue.h"
 #else
 #endif

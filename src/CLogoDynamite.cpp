@@ -22,7 +22,7 @@
 #include "CLogoDynamite.hpp"
 #include "CLog.hpp"
 #include "ff.h"
-#include "logomatic_v2.hpp"
+#include "Logomatic_V2.hpp"
 
 
 #include "CAnalogSampler.hpp"

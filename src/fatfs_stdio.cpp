@@ -4,7 +4,7 @@
 #include "inttypes.h"
 #include "diskio.h"
 #include "ff.h"
-#include "sdcard.hpp"
+#include "SDCard.hpp"
 
 
 FATFS     fatFs[_DRIVES];

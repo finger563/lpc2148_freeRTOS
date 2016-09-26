@@ -24,7 +24,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include "CSubsystem.hpp"
-#include "eFramework_config.hpp"
+#include "eframework_config.hpp"
 
 #if EFRAMEWORK_INCLUDE_ANALOG_SAMPLER
 #include "CAnalogSampler.hpp"

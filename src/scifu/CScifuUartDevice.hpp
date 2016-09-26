@@ -1,7 +1,7 @@
 #ifndef CScifuUartDevice_included
 #define CScifuUartDevice_included
 
-#include "cscifudevice.hpp"
+#include "CScifuDevice.hpp"
 
 class CScifuUartDevice :
    public CScifuDevice

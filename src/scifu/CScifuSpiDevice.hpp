@@ -1,7 +1,7 @@
 #ifndef cscifuspidevice_included
 #define cscifuspidevice_included
 
-#include "cscifudevice.hpp"
+#include "CScifuDevice.hpp"
 
 class CScifuSpiDevice :
    public CScifuDevice
