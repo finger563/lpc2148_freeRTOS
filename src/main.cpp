@@ -21,6 +21,11 @@
 #include "CSubsystem.hpp"
 #include "CLogoDynamite.hpp"
 
+void * __dso_handle;
+void * __exidx_start;
+void * __exidx_end;
+void * _isatty;
+
 /*******************************************************************************
  *                                                                              *
  * TYPES                                                                        *

@@ -286,7 +286,7 @@ ASFLAGS = $(ADEFS) -Wa,-adhlns=$(<:.S=.lst),--g$(DEBUG)
 ### EXTRA_LIBS: user libraries
 EXTRA_LIBS =
 #Support for newlibc-lpc (file: libnewlibc-lpc.a)
-NEWLIBLPC = -lnewlib-lpc
+#NEWLIBLPC = -lnewlib-lpc
 MATH_LIB = -lm
 CPLUSPLUS_LIB = -lstdc++
 ### LDFLAGS: Linker flags.
