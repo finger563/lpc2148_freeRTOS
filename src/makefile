@@ -371,7 +371,6 @@ $(FINAL_OUTPUT_FILE): $(PROJECT_NAME).elf
 program:
 	@echo
 	@echo "Programming SFE bootloader"
-	Cp $(FINAL_OUTPUT_FILE) D:/
 %.hex: %.elf
 	@echo
 	@echo $(MSG_FLASH) $@
