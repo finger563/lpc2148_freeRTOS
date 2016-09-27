@@ -61,7 +61,11 @@ int main( void )
 {   
   LOG_TRACE("main");
    
-  CLogoDynamite::Init();
+  //CLogoDynamite::Init();
+
+  LogomaticV2Init();
+
+  LogomaticV2Blinky();
    
   return 0;
 } // main

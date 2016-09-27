@@ -2,3 +2,9 @@
 *.lst
 *~
 .dep
+*.elf
+*.hex
+*.lss
+*.sym
+*.map
+FW.SFE

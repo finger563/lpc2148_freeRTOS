@@ -298,32 +298,32 @@ void LogomaticV2Stat(
    )
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 {
-	if(1 == statNum)
-	{
+  if(1 == statNum)
+    {
       // Stat1
-		if(LOGOMATIC_STAT_ON == onOff)
-      {
-         // OFF
-         IOCLR0 = 0x00000800;
-      }
-		else
-      {
-         // OFF
-         IOSET0 = 0x00000800;
-      }
-	}
-	else
+      if(LOGOMATIC_STAT_ON == onOff)
 	{
-      // Stat0
-		if(LOGOMATIC_STAT_ON == onOff)
-      {
-         // ON
-         IOCLR0 = 0x00000004;
-      }
-		else
-      {
-         // OFF
-         IOSET0 = 0x00000004;
-      }
+	  // OFF
+	  IOCLR0 = 0x00000800;
 	}
+      else
+	{
+	  // OFF
+	  IOSET0 = 0x00000800;
+	}
+    }
+  else
+    {
+      // Stat0
+      if(LOGOMATIC_STAT_ON == onOff)
+	{
+	  // ON
+	  IOCLR0 = 0x00000004;
+	}
+      else
+	{
+	  // OFF
+	  IOSET0 = 0x00000004;
+	}
+    }
 } // LogomaticV2Stat
