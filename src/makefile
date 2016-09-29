@@ -69,12 +69,10 @@ USE_THUMB_MODE          = YES
 ### CDEFS: C/C++ definitions
 #### FreeRTOS
 CDEFS += -DGCC_ARM7
-CDEFS += -D__WinARM__
 CDEFS += -DROM_RUN
 ### ADEFS: Assembler definitions
 ADEFS =
 #ADEFS += -DLPC2000_EXCEPTION_VECTORS_IN_RAM=1
-ADEFS += -D__WinARM__
 ADEFS += -DROM_RUN
 #-------------------------------------------------------------------------------
 #
@@ -97,6 +95,7 @@ EXTRAINCDIRS += $(FREERTOS_SOURCE_DIR)/include
 EXTRAINCDIRS += $(FREERTOS_PORT_DIR)
 EXTRAINCDIRS += $(SFE_SOURCE_DIR)
 EXTRAINCDIRS += $(LOGOMATIC_SOURCE_DIR)
+
 ### CSRC: C source files (*.c)
 CSRC =
 CSRC += $(SFE_SOURCE_DIR)/syscalls.c
@@ -105,19 +104,23 @@ CSRC += $(FREERTOS_SOURCE_DIR)/queue.c
 CSRC += $(FREERTOS_SOURCE_DIR)/tasks.c
 CSRC += $(FREERTOS_PORT_DIR)/port.c
 CSRC += $(FREERTOS_SOURCE_DIR)/portable/MemMang/heap_1.c
+
 ### CSRCARM: C source files (*.c) that must be compiled in ARM-Mode.
 CSRCARM =
 CSRCARM += $(FREERTOS_PORT_DIR)/portISR.c
+
 ### CPPSRC: C++ source files (*.cpp)
 CPPSRC = 
 CPPSRC += ./main.cpp
 CPPSRC += $(LOGOMATIC_SOURCE_DIR)/logomatic_v2.cpp
+
 ### CPPSRCARM: C++ source files (*.cpp) that must be compiled in ARM-Mode.
 CPPSRCARM =
 
 ### ASRC: Assembler source files (*.S) - Extension has to be capital or file
 # will be deleted during clean.
 ASRC = 
+
 # ASRCARM: assembler source files (*.S) that be assembled in ARM-Mode..
 ASRCARM  = Startup.S #Lpc2000ExceptionVectors.S Arm7CStartup.S
 #-------------------------------------------------------------------------------
@@ -131,6 +134,7 @@ THUMB_IW = -mthumb-interwork
 #### FreeRTOS
 CDEFS   += -DTHUMB_INTERWORK
 endif
+
 # Compiler flags.
 #  -g*:          generate debugging information
 #  -O*:          optimization level
@@ -139,6 +143,7 @@ endif
 #  -Wa,...:      tell GCC to pass this to the assembler.
 #    -adhlns...: create assembler listing
 #
+
 # Flags for C and C++ (arm-elf-gcc/arm-elf-g++)
 CFLAGS = $(patsubst %,-I%,$(EXTRAINCDIRS))
 CFLAGS += -g$(DEBUG)
@@ -146,8 +151,6 @@ CFLAGS += $(CDEFS)
 CFLAGS += -O$(OPTIMIZATION)
 CFLAGS += -Wall -Wextra -Wcast-align
 CFLAGS += -Wpointer-arith -Wswitch
-# 100607 jstoezel: removed because it is generating too many warnings
-#CFLAGS += -Wredundant-decls
 CFLAGS += -mlong-calls
 #CFLAGS += -ffunction-sections
 #CFLAGS += -fdata-sections
@@ -156,30 +159,32 @@ CFLAGS += -Wreturn-type -Wshadow -Wunused
 CFLAGS += -Wsign-compare -Waggregate-return 
 CFLAGS += -Wa,-adhlns=$(subst $(suffix $<),.lst,$<) 
 CFLAGS += -g
-# 100607 jstoezel: removed because it is generating too many warnings
-#CFLAGS += -Wcast-qual
+
 # flags only for C
-# 100607 jstoezel: removed because it is generating too many warnings with freeRTOS
-#CONLYFLAGS += -Wnested-externs
 CONLYFLAGS += $(CSTANDARD)
 CONLYFLAGS += -Wmissing-prototypes -Wimplicit 
 CONLYFLAGS += -Wbad-function-cast -Wstrict-prototypes
 CONLYFLAGS += -Wmissing-declarations
+
 ### CPPFLAGS: C++ flags only (arm-elf-g++)
 CPPFLAGS = 
 CPPFLAGS += -fno-rtti
 CPPFLAGS += -fno-use-cxa-atexit
+
 # Assembler flags.
 #  -Wa,...:    tell GCC to pass this to the assembler.
 #  -ahlns:     create listing
 #  -g$(DEBUG): have the assembler create line number information
 ASFLAGS = $(ADEFS) -Wa,-adhlns=$(<:.S=.lst),--g$(DEBUG)
+
 ### EXTRA_LIBS: user libraries
 EXTRA_LIBS =
+
 #Support for newlibc-lpc (file: libnewlibc-lpc.a)
 #NEWLIBLPC = -lnewlib-lpc
 MATH_LIB = -lm
 CPLUSPLUS_LIB = -lstdc++
+
 ### LDFLAGS: Linker flags.
 #  -Wl,...:     tell GCC to pass this to linker.
 #    -Map:      create map file
@@ -194,6 +199,7 @@ LDFLAGS += -lc -lgcc
 LDFLAGS += $(CPLUSPLUS_LIB)
 LDFLAGS += $(patsubst %,-L%,$(EXTRA_LIBDIRS))
 LDFLAGS += $(patsubst %,-l%,$(EXTRA_LIBS))
+
 # Set Linker-Script Depending On Selected Memory and Controller
 #LDFLAGS +=-T$(PROJECT_NAME)_$(SUBMDL).ld
 LDFLAGS +=-Tmain_memory_block.ld
