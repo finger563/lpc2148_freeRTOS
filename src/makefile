@@ -99,20 +99,21 @@ EXTRAINCDIRS += $(SFE_SOURCE_DIR)
 EXTRAINCDIRS += $(LOGOMATIC_SOURCE_DIR)
 ### CSRC: C source files (*.c)
 CSRC =
+CSRC += $(SFE_SOURCE_DIR)/syscalls.c
+CSRC += $(FREERTOS_SOURCE_DIR)/list.c
+CSRC += $(FREERTOS_SOURCE_DIR)/queue.c
+CSRC += $(FREERTOS_SOURCE_DIR)/tasks.c
+CSRC += $(FREERTOS_PORT_DIR)/port.c
+CSRC += $(FREERTOS_SOURCE_DIR)/portable/MemMang/heap_1.c
 ### CSRCARM: C source files (*.c) that must be compiled in ARM-Mode.
 CSRCARM =
 CSRCARM += $(FREERTOS_PORT_DIR)/portISR.c
-CSRCARM += $(FREERTOS_SOURCE_DIR)/tasks.c
-CSRCARM += $(FREERTOS_SOURCE_DIR)/queue.c
-CSRCARM += $(FREERTOS_SOURCE_DIR)/list.c
-CSRCARM += $(FREERTOS_SOURCE_DIR)/portable/MemMang/heap_1.c
-CSRCARM += $(FREERTOS_PORT_DIR)/port.c
-CSRCARM += $(SFE_SOURCE_DIR)/syscalls.c
 ### CPPSRC: C++ source files (*.cpp)
+CPPSRC = 
+CPPSRC += ./main.cpp
+CPPSRC += $(LOGOMATIC_SOURCE_DIR)/logomatic_v2.cpp
 ### CPPSRCARM: C++ source files (*.cpp) that must be compiled in ARM-Mode.
 CPPSRCARM =
-CPPSRCARM += ./main.cpp
-CPPSRCARM += $(LOGOMATIC_SOURCE_DIR)/logomatic_v2.cpp
 
 ### ASRC: Assembler source files (*.S) - Extension has to be capital or file
 # will be deleted during clean.

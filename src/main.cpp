@@ -27,7 +27,7 @@
  * PROTOTYPES                                                                   *
  *                                                                              *
  *******************************************************************************/
-extern "C" int    main( void );
+int    main( void );
 
 
 /*******************************************************************************
@@ -41,7 +41,6 @@ extern "C" void abort(void)
     {}
 } // abort
 
-extern "C" {
 #include "FreeRTOS.h"
 #include "task.h"
 
@@ -136,8 +135,9 @@ void set_leds(char num, char on_off)
     }
 }
 
-void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName )
-{
+extern "C" {
+  void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName )
+  {
     volatile signed char *name;
     volatile xTaskHandle *pxT;
 
@@ -146,14 +146,14 @@ void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName
     while(1) {
       set_leds(led0, led_off);
     }
-}
-
-void vApplicationMallocFailedHook(void)
-{
-  while(1) {
-    set_leds(led1, led_off);
   }
-}
+
+  void vApplicationMallocFailedHook(void)
+  {
+    while(1) {
+      set_leds(led1, led_off);
+    }
+  }
 }
 
 static void
@@ -195,6 +195,11 @@ int main( void )
 {   
   LogomaticV2Init();
 
+  set_leds(led_all, led_on);
+
+#if 1
+  initTimer0(timer0ISR);
+#else
   xTaskCreate(LEDTask,
 	      reinterpret_cast<const char *>("LEDTask"),
 	      TASK_STACK_SIZE,
@@ -203,12 +208,8 @@ int main( void )
 	      &xLEDTaskHandle
 	      );
 
-  //initTimer0(timer0ISR);
-
-  set_leds(led_all, led_on);
-
   vTaskStartScheduler();
-   
+#endif   
   set_leds(led3, led_off);
 
   return 0;
