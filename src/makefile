@@ -30,6 +30,24 @@ SHELL          = sh
 REMOVE         = rm -f
 COPY           = cp
 
+# ---------------------------------------------------------------------------
+# Flash-Programming support using lpc21isp by Martin Maurer 
+# only for Philips LPC and Analog ADuC ARMs
+#
+# Settings and variables:
+#LPC21ISP = lpc21isp
+LPC21ISP = lpc21isp
+LPC21ISP_PORT = COM4
+LPC21ISP_BAUD = 38400
+LPC21ISP_XTAL = 12000
+LPC21ISP_FLASHFILE = $(PROJECT_NAME).hex
+# verbose output:
+#LPC21ISP_DEBUG = -debug
+# enter bootloader via RS232 DTR/RTS (only if hardware supports this
+# feature - see Philips AppNote):
+LPC21ISP_CONTROL = -control
+# ---------------------------------------------------------------------------
+
 #-------------------------------------------------------------------------------
 #
 # CONFIGURATION
@@ -370,7 +388,8 @@ $(FINAL_OUTPUT_FILE): $(PROJECT_NAME).elf
 	$(OBJCOPY) -O binary $< $@
 program:
 	@echo
-	@echo "Programming SFE bootloader"
+	@echo $(MSG_LPC21_RESETREMINDER)
+	$(LPC21ISP) $(LPC21ISP_OPTIONS) $(LPC21ISP_DEBUG) $(LPC21ISP_FLASHFILE) $(LPC21ISP_PORT) $(LPC21ISP_BAUD) $(LPC21ISP_XTAL)
 %.hex: %.elf
 	@echo
 	@echo $(MSG_FLASH) $@
