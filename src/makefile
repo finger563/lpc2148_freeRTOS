@@ -21,7 +21,7 @@ PROJECT_NAME            = LOGOMATIC_FREERTOS
 TARGET_PREFIX  = arm-none-eabi-
 CC             = $(TARGET_PREFIX)gcc
 CPP            = $(TARGET_PREFIX)g++
-LD             = $(TARGET_PREFIX)ld
+LD             = $(TARGET_PREFIX)g++
 OBJCOPY        = $(TARGET_PREFIX)objcopy
 OBJDUMP        = $(TARGET_PREFIX)objdump
 SIZE           = $(TARGET_PREFIX)size
@@ -59,96 +59,7 @@ FINAL_OUTPUT_FILE       = FW.SFE
 MCU                     = arm7tdmi-s
 OPTIMIZATION            = 0
 SUBMDL                  = LPC2148
-USE_THUMB_MODE          = NO
-INCLUDE_UNIT_TEST       = YES
-DYNAMIC_LOG_VERBOSITY   = INFO
-STATIC_LOG_VERBOSITY    = TRACE
-CPU_LOAD_REFERENCE      = 79870
-#DYNAMIC_LOG_VERBOSITY   = OFF
-#DYNAMIC_LOG_VERBOSITY   = ERROR
-#DYNAMIC_LOG_VERBOSITY   = WARNING
-DYNAMIC_LOG_VERBOSITY   = INFO
-#DYNAMIC_LOG_VERBOSITY   = DEBUG
-#DYNAMIC_LOG_VERBOSITY   = TRACE
-
-RUN_MODE           		= RUN_STANDALONE
-#RUN_MODE           		= RUN_CPU_LOAD_CALIB
-#// RUN_UNIT_TEST
-
-
-ifeq ($(RUN_MODE),RUN_CPU_LOAD_CALIB)
-   CDEFS = -DEFRAMEWORK_INCLUDE_ANALOG_SAMPLER=0
-	CDEFS += -DEFRAMEWORK_INCLUDE_CONSOLE_SYSTEM=0
-	CDEFS += -DEFRAMEWORK_INCLUDE_SYSTEM_MONITOR_SYSTEM=1
-   EFRAMEWORK_INCLUDE_SYSTEM_MONITOR_CALIB_SYSTEM=1
-   EFRAMEWORK_INCLUDE_SYSTEM_MONITOR_SYSTEM=0
-   EFRAMEWORK_INCLUDE_ANALOG_SYSTEM=0
-   DYNAMIC_LOG_VERBOSITY=WARNING
-else
-	ifeq ($(RUN_MODE),RUN_STANDALONE)
-      CDEFS = -DEFRAMEWORK_INCLUDE_ANALOG_SAMPLER=1
-      CDEFS += -DEFRAMEWORK_INCLUDE_CONSOLE_SYSTEM=0
-      CDEFS += -DEFRAMEWORK_INCLUDE_SYSTEM_MONITOR_SYSTEM=1
-      EFRAMEWORK_INCLUDE_SYSTEM_MONITOR_CALIB_SYSTEM=0
-      EFRAMEWORK_INCLUDE_SYSTEM_MONITOR_SYSTEM=1
-      EFRAMEWORK_INCLUDE_ANALOG_SYSTEM=1
-	else
-	endif
-endif
-
-# Dynamic verbosity
-ifeq ($(DYNAMIC_LOG_VERBOSITY),OFF)
-	CDEFS += -DDYNAMIC_LOG_VERBOSITY=0
-else
-	ifeq ($(DYNAMIC_LOG_VERBOSITY),ERROR)
-      CDEFS += -DDYNAMIC_LOG_VERBOSITY=1
-	else
-      ifeq ($(DYNAMIC_LOG_VERBOSITY),WARNING)
-         CDEFS += -DDYNAMIC_LOG_VERBOSITY=2
-      else
-         ifeq ($(DYNAMIC_LOG_VERBOSITY),INFO)
-            CDEFS += -DDYNAMIC_LOG_VERBOSITY=3
-         else
-            ifeq ($(DYNAMIC_LOG_VERBOSITY),DEBUG)
-               CDEFS += -DDYNAMIC_LOG_VERBOSITY=4
-            else
-               ifeq ($(DYNAMIC_LOG_VERBOSITY),TRACE)
-                  CDEFS += -DDYNAMIC_LOG_VERBOSITY=5
-               else
-               endif
-            endif
-         endif
-      endif
-	endif
-endif
-
-# Static verbosity
-ifeq ($(STATIC_LOG_VERBOSITY),OFF)
-	CDEFS += -DSTATIC_LOG_VERBOSITY=0
-else
-	ifeq ($(STATIC_LOG_VERBOSITY),ERROR)
-      CDEFS += -DSTATIC_LOG_VERBOSITY=1
-	else
-      ifeq ($(STATIC_LOG_VERBOSITY),WARNING)
-         CDEFS += -DSTATIC_LOG_VERBOSITY=2
-      else
-         ifeq ($(STATIC_LOG_VERBOSITY),INFO)
-            CDEFS += -DSTATIC_LOG_VERBOSITY=3
-         else
-            ifeq ($(STATIC_LOG_VERBOSITY),DEBUG)
-               CDEFS += -DSTATIC_LOG_VERBOSITY=4
-            else
-               ifeq ($(STATIC_LOG_VERBOSITY),TRACE)
-                  CDEFS += -DSTATIC_LOG_VERBOSITY=5
-               else
-               endif
-            endif
-         endif
-      endif
-	endif
-endif
-
-CDEFS += -DCPU_LOAD_REFERENCE=$(CPU_LOAD_REFERENCE)
+USE_THUMB_MODE          = YES
 
 #-------------------------------------------------------------------------------
 #
@@ -157,109 +68,64 @@ CDEFS += -DCPU_LOAD_REFERENCE=$(CPU_LOAD_REFERENCE)
 #-------------------------------------------------------------------------------
 ### CDEFS: C/C++ definitions
 #### FreeRTOS
-CDEFS +=  -DGCC_ARM7
+CDEFS += -DGCC_ARM7
 CDEFS += -D__WinARM__
+CDEFS += -DROM_RUN
 ### ADEFS: Assembler definitions
-ADEFS =  -DLPC2000_EXCEPTION_VECTORS_IN_RAM=1
+ADEFS =
+#ADEFS += -DLPC2000_EXCEPTION_VECTORS_IN_RAM=1
 ADEFS += -D__WinARM__
+ADEFS += -DROM_RUN
 #-------------------------------------------------------------------------------
 #
 # SOURCE DIRECTORIES
 #
 #-------------------------------------------------------------------------------
-FREERTOS_SOURCE_DIR        = FreeRTOS/Source
-SFE_SOURCE_DIR             = lib
-LOGOMATIC_SOURCE_DIR       = logomaticv2
-EFRAMEWORK                 = eFrameWork
-SCIFU_SOURCE_DIR           = scifu
-FATFS_SOURCE_DIR           = fatfs/ff6/src
-ifeq ($(INCLUDE_UNIT_TEST),YES)
-EFRAMEWORK_UNIT_TEST       = $(EFRAMEWORK)/unitTest
-endif
+FREERTOS_SOURCE_DIR        = FreeRTOS/Source/
+FREERTOS_PORT_DIR          = $(FREERTOS_SOURCE_DIR)/portable/GCC/ARM7_LPC2000/
+SFE_SOURCE_DIR             = lib/
+LOGOMATIC_SOURCE_DIR       = logomaticv2/
+
 #-------------------------------------------------------------------------------
 #
 # SOURCE FILES
 #
 #-------------------------------------------------------------------------------
 # EXTRAINCDIRS: user include directories
-EXTRAINCDIRS =  $(FREERTOS_SOURCE_DIR)/include
+EXTRAINCDIRS =
+EXTRAINCDIRS += $(FREERTOS_SOURCE_DIR)/include
+EXTRAINCDIRS += $(FREERTOS_PORT_DIR)
 EXTRAINCDIRS += $(SFE_SOURCE_DIR)
 EXTRAINCDIRS += $(LOGOMATIC_SOURCE_DIR)
-EXTRAINCDIRS += $(EFRAMEWORK)
-EXTRAINCDIRS += $(EFRAMEWORK)/freeRTOS
-EXTRAINCDIRS += $(SCIFU_SOURCE_DIR)
-EXTRAINCDIRS += $(SCIFU_SOURCE_DIR)/common
-EXTRAINCDIRS += $(SCIFU_SOURCE_DIR)/drv/lpc2xxx
-EXTRAINCDIRS += $(FATFS_SOURCE_DIR)
-ifeq ($(INCLUDE_UNIT_TEST),YES)
-EXTRAINCDIRS += $(EFRAMEWORK_UNIT_TEST)
-endif
 ### CSRC: C source files (*.c)
 CSRC =
 ### CSRCARM: C source files (*.c) that must be compiled in ARM-Mode.
-CSRCARM = $(FREERTOS_SOURCE_DIR)/portable/GCC/ARM7_LPC2000/portISR.c \
-$(FREERTOS_SOURCE_DIR)/tasks.c \
-$(FREERTOS_SOURCE_DIR)/queue.c \
-$(FREERTOS_SOURCE_DIR)/list.c \
-$(FREERTOS_SOURCE_DIR)/portable/MemMang/heap_1.c \
-$(FREERTOS_SOURCE_DIR)/portable/GCC/ARM7_LPC2000/port.c \
-$(SFE_SOURCE_DIR)/syscalls.c \
-$(FATFS_SOURCE_DIR)/ff.c \
-$(FATFS_SOURCE_DIR)/diskio.c
+CSRCARM =
+CSRCARM += $(FREERTOS_PORT_DIR)/portISR.c
+CSRCARM += $(FREERTOS_SOURCE_DIR)/tasks.c
+CSRCARM += $(FREERTOS_SOURCE_DIR)/queue.c
+CSRCARM += $(FREERTOS_SOURCE_DIR)/list.c
+CSRCARM += $(FREERTOS_SOURCE_DIR)/portable/MemMang/heap_1.c
+CSRCARM += $(FREERTOS_PORT_DIR)/port.c
+CSRCARM += $(SFE_SOURCE_DIR)/syscalls.c
 ### CPPSRC: C++ source files (*.cpp)
 ### CPPSRCARM: C++ source files (*.cpp) that must be compiled in ARM-Mode.
-ifeq ($(RUN_MODE),RUN_UNIT_TEST)
-CPPSRCARM = $(EFRAMEWORK_UNIT_TEST)/main.cpp
-else
-CPPSRCARM = ./main.cpp
-endif
-CPPSRCARM += CLogoDynamite.cpp
+CPPSRCARM =
+CPPSRCARM += ./main.cpp
 CPPSRCARM += $(LOGOMATIC_SOURCE_DIR)/logomatic_v2.cpp
-CPPSRCARM += $(EFRAMEWORK)/eFrameWork.cpp
-CPPSRCARM += $(EFRAMEWORK)/freeRTOS/CScheduler.cpp
-CPPSRCARM += $(EFRAMEWORK)/freeRTOS/CSubsystem.cpp
-ifeq ($(EFRAMEWORK_INCLUDE_ANALOG_SYSTEM),1)
-CPPSRCARM += $(EFRAMEWORK)/freeRTOS/CAnalogSampler.cpp
-CPPSRCARM += $(EFRAMEWORK)/freeRTOS/CLpc2000AnalogSampler.cpp
-else
-endif
 
-ifeq ($(EFRAMEWORK_INCLUDE_SYSTEM_MONITOR_CALIB_SYSTEM),1)
-CPPSRCARM += $(EFRAMEWORK)/freeRTOS/CSystemMonitor_calib.cpp
-else
-endif
-ifeq ($(EFRAMEWORK_INCLUDE_SYSTEM_MONITOR_SYSTEM),1)
-CPPSRCARM += $(EFRAMEWORK)/freeRTOS/CSystemMonitor.cpp
-else
-endif
-
-
-CPPSRCARM += $(EFRAMEWORK)/freeRTOS/CLog.cpp
-CPPSRCARM += $(SCIFU_SOURCE_DIR)/CScifuDevice.cpp
-CPPSRCARM += $(SCIFU_SOURCE_DIR)/CScifu.cpp
-CPPSRCARM += $(SCIFU_SOURCE_DIR)/drv/lpc2xxx/CLpc21xxUartDev.cpp
-CPPSRCARM += $(SCIFU_SOURCE_DIR)/drv/lpc2xxx/CLpc21xxSpiDev.cpp
-CPPSRCARM += $(SCIFU_SOURCE_DIR)/CScifuUartDevice.cpp
-CPPSRCARM += $(SCIFU_SOURCE_DIR)/CScifuSpiDevice.cpp
-CPPSRCARM += $(SCIFU_SOURCE_DIR)/common/ringBuf.cpp
-CPPSRCARM += fatfs_stdio.cpp
-CPPSRCARM += SDCard.cpp
-ifeq ($(INCLUDE_UNIT_TEST),YES)
-CPPSRCARM += $(EFRAMEWORK_UNIT_TEST)/eFrameworkUnitTest.cpp
-CPPSRCARM += $(EFRAMEWORK_UNIT_TEST)/jssUnit.cpp
-endif
 ### ASRC: Assembler source files (*.S) - Extension has to be capital or file
 # will be deleted during clean.
 ASRC = 
 # ASRCARM: assembler source files (*.S) that be assembled in ARM-Mode..
-ASRCARM  = Lpc2000ExceptionVectors.S Arm7CStartup.S
+ASRCARM  = Startup.S #Lpc2000ExceptionVectors.S Arm7CStartup.S
 #-------------------------------------------------------------------------------
 #
 # COMPILER CONFIGURATION
 #
 #-------------------------------------------------------------------------------
 ifeq ($(USE_THUMB_MODE),YES)
-THUMB    = -mthumb
+#THUMB    = -mthumb
 THUMB_IW = -mthumb-interwork
 #### FreeRTOS
 CDEFS   += -DTHUMB_INTERWORK
@@ -281,6 +147,10 @@ CFLAGS += -Wall -Wextra -Wcast-align
 CFLAGS += -Wpointer-arith -Wswitch
 # 100607 jstoezel: removed because it is generating too many warnings
 #CFLAGS += -Wredundant-decls
+CFLAGS += -mlong-calls
+#CFLAGS += -ffunction-sections
+#CFLAGS += -fdata-sections
+CFLAGS += -fno-exceptions
 CFLAGS += -Wreturn-type -Wshadow -Wunused
 CFLAGS += -Wsign-compare -Waggregate-return 
 CFLAGS += -Wa,-adhlns=$(subst $(suffix $<),.lst,$<) 
@@ -296,6 +166,8 @@ CONLYFLAGS += -Wbad-function-cast -Wstrict-prototypes
 CONLYFLAGS += -Wmissing-declarations
 ### CPPFLAGS: C++ flags only (arm-elf-g++)
 CPPFLAGS = 
+CPPFLAGS += -fno-rtti
+CPPFLAGS += -fno-use-cxa-atexit
 # Assembler flags.
 #  -Wa,...:    tell GCC to pass this to the assembler.
 #  -ahlns:     create listing
@@ -311,13 +183,19 @@ CPLUSPLUS_LIB = -lstdc++
 #  -Wl,...:     tell GCC to pass this to linker.
 #    -Map:      create map file
 #    --cref:    add cross reference to  map file
-LDFLAGS = -nostartfiles -Wl,-Map=$(PROJECT_NAME).map,--cref --specs=nosys.specs
+LDFLAGS = -nostartfiles -Wl,-Map=$(PROJECT_NAME).map,--cref
+LDFLAGS += --specs=nosys.specs
+LDFLAGS += -lnosys
 LDFLAGS += -lc
-LDFLAGS += $(NEWLIBLPC) $(MATH_LIB)
-LDFLAGS += -lc -lgcc 
+LDFLAGS += $(NEWLIBLPC)
+LDFLAGS += $(MATH_LIB)
+LDFLAGS += -lc -lgcc
 LDFLAGS += $(CPLUSPLUS_LIB)
+LDFLAGS += $(patsubst %,-L%,$(EXTRA_LIBDIRS))
+LDFLAGS += $(patsubst %,-l%,$(EXTRA_LIBS))
 # Set Linker-Script Depending On Selected Memory and Controller
-LDFLAGS +=-T$(PROJECT_NAME)_$(SUBMDL).ld
+#LDFLAGS +=-T$(PROJECT_NAME)_$(SUBMDL).ld
+LDFLAGS +=-Tmain_memory_block.ld
 ### Define Messages
 MSG_COMPILATION_SUCCEEDED = Compilation succeeded
 MSG_BEGIN = "-------- Build started --------"
@@ -411,7 +289,7 @@ program:
 %.elf:  $(AOBJARM) $(AOBJ) $(COBJARM) $(COBJ) $(CPPOBJ) $(CPPOBJARM)
 	@echo
 	@echo $(MSG_LINKING) $@
-	$(CC) $(THUMB) $(ALL_CFLAGS) $(AOBJARM) $(AOBJ) $(COBJARM) $(COBJ) $(CPPOBJ) $(CPPOBJARM) --output $@ $(LDFLAGS)
+	$(CPP) $(THUMB) $(ALL_CFLAGS) $(AOBJARM) $(AOBJ) $(COBJARM) $(COBJ) $(CPPOBJ) $(CPPOBJARM) --output $@ $(LDFLAGS)
 %.elfagain:  $(AOBJARM) $(AOBJ) $(COBJARM) $(COBJ) $(CPPOBJ) $(CPPOBJARM) symbols.o
 	@echo
 	@echo $(MSG_LINKING) $@

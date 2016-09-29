@@ -55,15 +55,15 @@
 #define FREERTOS_CONFIG_H
 
 #include "LPC214x.h"
-#define vPortYieldProcessor _Lpc2000ExceptionVectorsSoftwareIntHandler
 
 /* For compatability with the LPC2106 header. */
 #define T0_IR T0IR
 #define T0_PR T0PR
+#define T0_PC T0PC
 #define T0_MR0 T0MR0
 #define T0_MCR T0MCR
 #define T0_TCR T0TCR
-
+#define T0_CCR T0CCR
 
 /*-----------------------------------------------------------
  * Application specific definitions.
@@ -78,41 +78,42 @@
  *----------------------------------------------------------*/
 
 
-#define configUSE_PREEMPTION                    1
-#define configUSE_IDLE_HOOK	                0
-#define configUSE_TICK_HOOK	                1
+#define configUSE_PREEMPTION			1
+#define configUSE_IDLE_HOOK			0
+#define configUSE_TICK_HOOK			0
+#define configUSE_MALLOC_FAILED_HOOK		1
 /* In this case configCPU_CLOCK_HZ is actually set to the pclk frequency, not
 the CPU frequency. */
-#define configCPU_CLOCK_HZ			( 5*12000000UL )	/* =12MHz xtal multiplied by 5 using the PLL. */
+#define configCPU_CLOCK_HZ			( 6*12000000UL )	/* =12MHz xtal multiplied by 5 using the PLL. */
 #define configTICK_RATE_HZ			( ( portTickType ) 2000 )
-#define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE )3 )
+#define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE )20 )
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 128 )
 #define configTOTAL_HEAP_SIZE			( ( size_t ) (15 * 1024 ) )
-#define configMAX_TASK_NAME_LEN			( 8 )
+#define configMAX_TASK_NAME_LEN			( 20 )
 #define configUSE_TRACE_FACILITY		0
 #define configUSE_16_BIT_TICKS			0
 #define configIDLE_SHOULD_YIELD			1
 #define configUSE_MUTEXES			1
-#define configUSE_RECURSIVE_MUTEXES		1
+#define configUSE_RECURSIVE_MUTEXES		0
 #define configCHECK_FOR_STACK_OVERFLOW	        1
 #define configUSE_COUNTING_SEMAPHORES           1
 
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES			0
-#define configMAX_CO_ROUTINE_PRIORITIES       ( 2 )
+#define configMAX_CO_ROUTINE_PRIORITIES         ( 2 )
 
 /* Set the following definitions to 1 to include the API function, or zero
 to exclude the API function. */
 
-#define INCLUDE_vTaskPrioritySet		1
-#define INCLUDE_uxTaskPriorityGet		1
-#define INCLUDE_vTaskDelete			1
+#define INCLUDE_vTaskPrioritySet		0
+#define INCLUDE_uxTaskPriorityGet		0
+#define INCLUDE_vTaskDelete			0
 #define INCLUDE_vTaskCleanUpResources	        0
-#define INCLUDE_vTaskSuspend			1
-#define INCLUDE_vTaskDelayUntil			1
+#define INCLUDE_vTaskSuspend			0
+#define INCLUDE_vTaskDelayUntil			0
 #define INCLUDE_vTaskDelay			1
 
-#define INCLUDE_uxTaskGetStackHighWaterMark     1
+#define INCLUDE_uxTaskGetStackHighWaterMark     0
 
 
 #endif /* FREERTOS_CONFIG_H */

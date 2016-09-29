@@ -33,6 +33,24 @@
 #define LOGOMATIC_STAT_OFF	0
 
 
+#define P0DIR  IODIR0
+#define P0SET  IOSET0
+#define P0CLR  IOCLR0
+#define P0PIN  IOPIN0
+
+#define P1DIR  IODIR1
+#define P1SET  IOSET1
+#define P1CLR  IOCLR1
+#define P1PIN  IOPIN1
+
+#define led0 (0b01<<17)
+#define led1 (0b01<<27)
+#define led2 (0b01<<31)
+#define led3 (0b01<<13)
+#define led_all 4
+#define led_on 1
+#define led_off 0
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // TYPES

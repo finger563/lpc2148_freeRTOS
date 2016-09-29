@@ -16,62 +16,9 @@
 // INCLUDES
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#include "Logomatic_V2.hpp"
+#include "logomatic_v2.hpp"
 #include "LPC214x.h"
-#include "CLpc21xxUartDev.hpp"
 #include "FreeRTOSConfig.h"
-#include "CLpc21xxSpiDev.hpp"
-#include "SDCard.hpp"
-#include "CScifu.hpp"
-#include "CLog.hpp"
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// MACROS
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-extern int32_t FatFSInit(void);
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// STATIC VARIABLES
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-static CLpc21xxUartDev              lpc21xxUart0(reinterpret_cast<uint8_t *>(0xE000C000), configCPU_CLOCK_HZ);
-static CLpc21xxSpiDev               lpc21xxSpi0(0xE0020000, configCPU_CLOCK_HZ);
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// LOCAL FUNCTIONS
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-void Spi0Select(
-   const uint8_t index
-   )
-{
-   switch(index)
-   {
-      default:
-      {
-         IOCLR0 |= (1<<7);
-      }
-   }
-}
-
-void Spi0UnSelect(
-   const uint8_t index
-   )
-{
-   switch(index)
-   {
-      default:
-      {
-         IOSET0 |= (1<<7);
-      }
-   }
-}
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -80,8 +27,8 @@ void Spi0UnSelect(
 // RETURN VALUE:  None
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 static void LogomaticV2DelayMs(
-   const uint32_t count // in, approximate delay in milliseconds
-   );
+			       const uint32_t count // in, approximate delay in milliseconds
+			       );
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // NAME:          LogomaticV2PllFeed
@@ -101,201 +48,92 @@ static void LogomaticV2PllFeed(void);
 void LogomaticV2Blinky(void)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 {
-   PINSEL0 = 0xCF351505;
-   PINSEL1 = 0x15441801;
-   IODIR0 |= 0x00000884;
-
-   while(true)
-   {
+  while(true)
+    {
       LogomaticV2Stat(0, LOGOMATIC_STAT_ON);
       LogomaticV2Stat(1, LOGOMATIC_STAT_OFF);
       LogomaticV2DelayMs(500);
       LogomaticV2Stat(0, LOGOMATIC_STAT_OFF);
       LogomaticV2Stat(1, LOGOMATIC_STAT_ON);
       LogomaticV2DelayMs(500);
-   }
+    }
 } // LogomaticV2Blinky
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void LogomaticV2DelayMs(
-   const uint32_t count // in
-   )
+			const uint32_t count // in
+			)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 {
-	uint32_t i        = 0;
-   uint32_t countMs  = count * 10000;
+  uint32_t i        = 0;
+  uint32_t countMs  = count * 10000;
 	
-   for(i = 0; i < countMs; i++)
-		asm volatile ("nop");
+  for(i = 0; i < countMs; i++)
+    asm volatile ("nop");
 
 } // LogomaticV2DelayMs
 
 void delay_ms(int count)
 {
-	int i;
-	count *= 10000;
-	for(i = 0; i < count; i++)
-		asm volatile ("nop");
-}
-
-void setup_uart0(int newbaud, char want_ints)
-{
-	int baud = newbaud;
-	U0LCR = 0x83;   // 8 bits, no parity, 1 stop bit, DLAB = 1
-	
-	if(baud == 1200)
-	{
-		U0DLM = 0x0C;
-		U0DLL = 0x00;
-	}
-	else if(baud == 2400)
-	{
-		U0DLM = 0x06;
-		U0DLL = 0x00;
-	}
-	else if(baud == 4800)
-	{
-		U0DLM = 0x03;
-		U0DLL = 0x00;
-	}
-	else if(baud == 9600)
-	{
-		U0DLM = 0x01;
-		U0DLL = 0x80;
-	}
-	else if(baud == 19200)
-	{
-		U0DLM = 0x00;
-		U0DLL = 0xC0;
-	}
-	else if(baud == 38400)
-	{
-		U0DLM = 0x00;
-		U0DLL = 0x60;
-	}
-	else if(baud == 57600)
-	{
-		U0DLM = 0x00;
-		U0DLL = 0x40;
-	}
-	else if(baud == 115200)
-	{
-		U0DLM = 0x00;
-		U0DLL = 0x20;
-	}
-
-	U0FCR = 0x01;
-	U0LCR = 0x03;   
-
-	if(want_ints == 1)
-	{
-		/*enableIRQ();
-		VICIntSelect &= ~0x00000040;
-		VICIntEnable |= 0x00000040;
-		VICVectCntl1 = 0x26;
-		VICVectAddr1 = (unsigned int)UART0ISR;
-		U0IER = 0x01;*/
-	}
-	else if(want_ints == 2)
-	{
-		/*enableIRQ();
-		VICIntSelect &= ~0x00000040;
-		VICIntEnable |= 0x00000040;
-		VICVectCntl2 = 0x26;
-		VICVectAddr2 = (unsigned int)UART0ISR_2;
-		U0IER = 0X01;*/
-	}
-	else if(want_ints == 0)
-	{
-		VICIntEnClr = 0x00000040;
-		U0IER = 0x00;
-	}
+  int i;
+  count *= 10000;
+  for(i = 0; i < count; i++)
+    asm volatile ("nop");
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void LogomaticV2Init(void)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 {
-   // Setting Multiplier and Divider values
-	PLLCFG=0x24; // M = 5
-   LogomaticV2PllFeed();
+  // Setting Multiplier and Divider values
+  PLLCFG=0x25; // M = 6
+  LogomaticV2PllFeed();
 
-   // Enabling the PLL */
-   PLLCON=0x1;
-   LogomaticV2PllFeed();
+  // Enabling the PLL */
+  PLLCON=0x1;
+  LogomaticV2PllFeed();
 
 #define PLOCK 0x400
-   // Wait for the PLL to lock to set frequency
-   while(!(PLLSTAT & PLOCK)) ;
+  // Wait for the PLL to lock to set frequency
+  while(!(PLLSTAT & PLOCK)) ;
 
-   // Connect the PLL as the clock source
-   PLLCON=0x3;
-   LogomaticV2PllFeed();
+  // Connect the PLL as the clock source
+  PLLCON=0x3;
+  LogomaticV2PllFeed();
 
-   // Enabling MAM and setting number of clocks used for Flash memory fetch (4 cclks in this case)
-   //MAMTIM=0x3; //VCOM?
-   MAMCR=0x2;
-   MAMTIM=0x4; //Original
+  // Enabling MAM and setting number of clocks used for Flash memory fetch (4 cclks in this case)
+  //MAMTIM=0x3; //VCOM?
+  MAMCR=0x2;
+  MAMTIM=0x4; //Original
 
-   // Setting peripheral Clock (pclk) to System Clock (cclk)
-   VPBDIV=0x1;
+  // Setting peripheral Clock (pclk) to System Clock (cclk)
+  VPBDIV=0x1;
 
-	PINSEL0 = 0xCF351505;
-	PINSEL1 = 0x15441801;
-	IODIR0 |= 0x00000884;
-	IOSET0 = 0x00000080;
+  PINSEL0 = 0;
 
-	S0SPCR = 0x08;  // SPI clk to be pclk/8
-	S0SPCR = 0x30;  // master, msb, first clk edge, active high, no ints
+  P0DIR |= led0  | led3;// PID_output
+  P1DIR |= led1 | led2;
+  P0SET = led0  | led3;
+  P1SET = led1 | led2;
    
-   LogomaticV2Stat(0, LOGOMATIC_STAT_ON);
-   LogomaticV2Stat(1, LOGOMATIC_STAT_ON);
-   
-   CScifu::AddDevice(lpc21xxUart0, "uart0");
-   setup_uart0(115200, 0);
-   CScifu::AddIoDevice(lpc21xxUart0);
-   
-   CScifu::AddDevice(lpc21xxSpi0, "spi0");
-   lpc21xxSpi0.AttachCs(Spi0Select, Spi0UnSelect,1);
-   
-   for(int i = 0; i < 21; i++)
-   {
-      char dummy = 0;
-      lpc21xxSpi0.Write(&dummy, 1);
-   }
-   
-   if(0 == SdCardSlotInit())
-   {
-      if(0 == FatFSInit())
-      {
-         LOG_INFO("LogomaticV2Init FatFSInit succeeded");
-      } // if(0 == EfslStdioInit())
-      else
-      {
-         LOG_ERROR("LogomaticV2Init FatFSInit failed");
-      }
-   } // if(0 == SdCardSlotInit(0))
-   else
-   {
-      LOG_INFO("LogomaticV2Init SdCardSlotInit failed");
-   }   
-
+  LogomaticV2Stat(0, LOGOMATIC_STAT_ON);
+  LogomaticV2Stat(1, LOGOMATIC_STAT_ON);
 } // LogomaticV2Init
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void LogomaticV2PllFeed(void)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 {
-   PLLFEED=0xAA;
-   PLLFEED=0x55;
+  PLLFEED=0xAA;
+  PLLFEED=0x55;
 } // LogomaticV2PllFeed
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void LogomaticV2Stat(
-   const uint32_t statNum, // in
-   const uint32_t onOff    // in
-   )
+		     const uint32_t statNum, // in
+		     const uint32_t onOff    // in
+		     )
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 {
   if(1 == statNum)
@@ -303,13 +141,13 @@ void LogomaticV2Stat(
       // Stat1
       if(LOGOMATIC_STAT_ON == onOff)
 	{
-	  // OFF
-	  IOCLR0 = 0x00000800;
+	  // ON
+	  P0CLR = led0;
 	}
       else
 	{
 	  // OFF
-	  IOSET0 = 0x00000800;
+	  P0SET = led0;
 	}
     }
   else
@@ -318,12 +156,12 @@ void LogomaticV2Stat(
       if(LOGOMATIC_STAT_ON == onOff)
 	{
 	  // ON
-	  IOCLR0 = 0x00000004;
+	  P1CLR = led1;
 	}
       else
 	{
 	  // OFF
-	  IOSET0 = 0x00000004;
+	  P1SET = led1;
 	}
     }
 } // LogomaticV2Stat
